@@ -82,7 +82,6 @@ Thumbs.db
 
 # CI/CD
 .circleci/
-.github/
 .travis.yml
 jenkins/
 bamboo/
