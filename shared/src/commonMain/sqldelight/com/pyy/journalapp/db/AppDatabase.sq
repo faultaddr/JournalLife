@@ -1,0 +1,242 @@
+CREATE TABLE users (
+    id TEXT PRIMARY KEY NOT NULL,
+    email TEXT,
+    phone TEXT,
+    display_name TEXT NOT NULL,
+    avatar_url TEXT,
+    created_at INTEGER NOT NULL, -- timestamp in milliseconds
+    locale TEXT DEFAULT 'en',
+    theme TEXT DEFAULT 'SYSTEM', -- Theme enum values
+    privacy_defaults TEXT DEFAULT 'PRIVATE' -- Visibility enum values
+);
+
+-- Queries for users
+users_insert:
+INSERT INTO users (id, email, phone, display_name, avatar_url, created_at, locale, theme, privacy_defaults)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+users_selectById:
+SELECT *
+FROM users
+WHERE id = ?;
+
+users_selectByEmail:
+SELECT *
+FROM users
+WHERE email = ?;
+
+users_deleteById:
+DELETE FROM users
+WHERE id = ?;
+
+CREATE TABLE books (
+    id TEXT PRIMARY KEY NOT NULL,
+    owner_id TEXT NOT NULL,
+    title TEXT NOT NULL,
+    cover_image_id TEXT,
+    description TEXT,
+    visibility_default TEXT DEFAULT 'PRIVATE', -- Visibility enum values
+    created_at INTEGER NOT NULL, -- timestamp in milliseconds
+    updated_at INTEGER NOT NULL  -- timestamp in milliseconds
+);
+
+CREATE INDEX book_owner_index ON books(owner_id);
+
+-- Queries for books
+books_insert:
+INSERT INTO books (id, owner_id, title, cover_image_id, description, visibility_default, created_at, updated_at)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+
+books_selectById:
+SELECT *
+FROM books
+WHERE id = ?;
+
+books_selectByOwner:
+SELECT *
+FROM books
+WHERE owner_id = ?;
+
+books_update:
+UPDATE books
+SET owner_id = ?,
+    title = ?,
+    cover_image_id = ?,
+    description = ?,
+    visibility_default = ?,
+    updated_at = ?
+WHERE id = ?;
+
+books_deleteById:
+DELETE FROM books
+WHERE id = ?;
+
+CREATE TABLE journal_entries (
+    id TEXT PRIMARY KEY NOT NULL,
+    owner_id TEXT NOT NULL,
+    book_id TEXT NOT NULL,
+    title TEXT NOT NULL,
+    created_at INTEGER NOT NULL, -- timestamp in milliseconds
+    updated_at INTEGER NOT NULL, -- timestamp in milliseconds
+    visibility TEXT DEFAULT 'PRIVATE', -- Visibility enum values
+    tags TEXT, -- JSON array of strings
+    word_count INTEGER DEFAULT 0,
+    image_count INTEGER DEFAULT 0
+);
+
+-- Queries for journal_entries
+journal_entries_insert:
+INSERT INTO journal_entries (id, owner_id, book_id, title, created_at, updated_at, visibility, tags, word_count, image_count)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+journal_entries_selectById:
+SELECT *
+FROM journal_entries
+WHERE id = ?;
+
+journal_entries_selectByBook:
+SELECT *
+FROM journal_entries
+WHERE book_id = ?
+ORDER BY updated_at DESC;
+
+journal_entries_update:
+UPDATE journal_entries
+SET owner_id = ?,
+    book_id = ?,
+    title = ?,
+    updated_at = ?,
+    visibility = ?,
+    tags = ?,
+    word_count = ?,
+    image_count = ?
+WHERE id = ?;
+
+journal_entries_deleteById:
+DELETE FROM journal_entries
+WHERE id = ?;
+
+CREATE INDEX journal_entry_book_index ON journal_entries(book_id);
+CREATE INDEX journal_entry_owner_index ON journal_entries(owner_id);
+
+CREATE TABLE blocks (
+    id TEXT PRIMARY KEY NOT NULL,
+    entry_id TEXT NOT NULL,
+    type TEXT NOT NULL, -- BlockType enum values
+    created_at INTEGER NOT NULL, -- timestamp in milliseconds
+    updated_at INTEGER NOT NULL, -- timestamp in milliseconds
+    order_index INTEGER NOT NULL,
+    text_content TEXT, -- for text, quote, heading, todo blocks
+    image_id TEXT, -- for image blocks
+    caption TEXT, -- for image blocks
+    layout TEXT, -- for image blocks (INLINE, FULL_WIDTH)
+    crop_data TEXT, -- JSON object for crop information
+    style_data TEXT, -- JSON object for text styles
+    format TEXT, -- for text blocks (PLAIN, MARKDOWN_LITE)
+    completed INTEGER DEFAULT 0, -- for todo blocks (0=false, 1=true)
+    heading_level INTEGER DEFAULT 1 -- for heading blocks
+);
+
+-- Queries for blocks
+blocks_insert:
+INSERT INTO blocks (id, entry_id, type, created_at, updated_at, order_index, text_content, image_id, caption, layout, crop_data, style_data, format, completed, heading_level)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+blocks_selectById:
+SELECT *
+FROM blocks
+WHERE id = ?;
+
+blocks_selectByEntry:
+SELECT *
+FROM blocks
+WHERE entry_id = ?
+ORDER BY order_index ASC;
+
+blocks_update:
+UPDATE blocks
+SET entry_id = ?,
+    type = ?,
+    updated_at = ?,
+    order_index = ?,
+    text_content = ?,
+    image_id = ?,
+    caption = ?,
+    layout = ?,
+    crop_data = ?,
+    style_data = ?,
+    format = ?,
+    completed = ?,
+    heading_level = ?
+WHERE id = ?;
+
+blocks_deleteById:
+DELETE FROM blocks
+WHERE id = ?;
+
+CREATE INDEX block_entry_index ON blocks(entry_id);
+
+CREATE TABLE media (
+    id TEXT PRIMARY KEY NOT NULL,
+    owner_id TEXT NOT NULL,
+    type TEXT NOT NULL, -- MediaType enum values
+    local_path TEXT,
+    remote_url TEXT,
+    width INTEGER,
+    height INTEGER,
+    created_at INTEGER NOT NULL -- timestamp in milliseconds
+);
+
+-- Queries for media
+media_insert:
+INSERT INTO media (id, owner_id, type, local_path, remote_url, width, height, created_at)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+
+media_selectById:
+SELECT *
+FROM media
+WHERE id = ?;
+
+media_selectByOwner:
+SELECT *
+FROM media
+WHERE owner_id = ?;
+
+media_deleteById:
+DELETE FROM media
+WHERE id = ?;
+
+CREATE INDEX media_owner_index ON media(owner_id);
+
+CREATE TABLE shares (
+    id TEXT PRIMARY KEY NOT NULL,
+    target_type TEXT NOT NULL, -- ShareTargetType enum values
+    target_id TEXT NOT NULL,
+    owner_id TEXT NOT NULL,
+    visibility TEXT NOT NULL, -- ShareVisibility enum values
+    share_token TEXT NOT NULL,
+    created_at INTEGER NOT NULL, -- timestamp in milliseconds
+    expired_at INTEGER -- timestamp in milliseconds
+);
+
+-- Queries for shares
+shares_insert:
+INSERT INTO shares (id, target_type, target_id, owner_id, visibility, share_token, created_at, expired_at)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+
+shares_selectById:
+SELECT *
+FROM shares
+WHERE id = ?;
+
+shares_selectByTarget:
+SELECT *
+FROM shares
+WHERE target_id = ? AND target_type = ?;
+
+shares_deleteById:
+DELETE FROM shares
+WHERE id = ?;
+
+CREATE INDEX share_target_index ON shares(target_id);
+CREATE INDEX share_owner_index ON shares(owner_id);

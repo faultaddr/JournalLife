@@ -1,108 +1,67 @@
-# Notebook Journal - Compose Multiplatform Application
+This is a Kotlin Multiplatform project targeting Android, iOS, Desktop (JVM), Server.
 
-This is a complete Compose Multiplatform application based on the Notebook Journal specification. The application supports Android, iOS, and Desktop platforms.
+* [/composeApp](./composeApp/src) is for code that will be shared across your Compose Multiplatform applications.
+  It contains several subfolders:
+  - [commonMain](./composeApp/src/commonMain/kotlin) is for code that’s common for all targets.
+  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
+    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
+    the [iosMain](./composeApp/src/iosMain/kotlin) folder would be the right place for such calls.
+    Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./composeApp/src/jvmMain/kotlin)
+    folder is the appropriate location.
 
-## Features Implemented
+* [/iosApp](./iosApp/iosApp) contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform,
+  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
 
-- **User Management**: Login/register functionality
-- **Journal Creation**: Create and edit journal entries with text and images
-- **Book Organization**: Organize journals into books
-- **Privacy Controls**: Set journals as public or private
-- **Statistics**: View writing frequency, word counts, and other metrics
-- **Navigation**: Tab-based navigation between different sections
+* [/server](./server/src/main/kotlin) is for the Ktor server application.
 
-## Project Structure
+* [/shared](./shared/src) is for the code that will be shared between all targets in the project.
+  The most important subfolder is [commonMain](./shared/src/commonMain/kotlin). If preferred, you
+  can add code to the platform-specific folders here too.
 
-```
-app/
-├── src/
-│   ├── commonMain/
-│   │   ├── kotlin/
-│   │   │   └── com/example/journal/
-│   │   │       ├── models/          # Data models
-│   │   │       ├── ui/              # UI components
-│   │   │       │   └── theme/       # Theme definitions
-│   │   │       ├── navigation/      # Navigation logic
-│   │   │       ├── screens/         # Screen implementations
-│   │   │       ├── repository/      # Data repository
-│   │   │       ├── viewmodel/       # ViewModels
-│   │   │       └── di/              # Dependency injection
-│   │   └── composeResources/        # Compose resources
-│   ├── androidMain/
-│   ├── iosMain/
-│   └── desktopMain/
-```
+### Build and Run Android Application
 
-## How to Build and Run
+To build and run the development version of the Android app, use the run configuration from the run widget
+in your IDE’s toolbar or build it directly from the terminal:
+- on macOS/Linux
+  ```shell
+  ./gradlew :composeApp:assembleDebug
+  ```
+- on Windows
+  ```shell
+  .\gradlew.bat :composeApp:assembleDebug
+  ```
 
-### Prerequisites
+### Build and Run Desktop (JVM) Application
 
-1. Java 11 or higher
-2. Gradle 8.4 or higher
-3. Android Studio/IntelliJ IDEA for Android development
-4. Xcode for iOS development (macOS only)
+To build and run the development version of the desktop app, use the run configuration from the run widget
+in your IDE’s toolbar or run it directly from the terminal:
+- on macOS/Linux
+  ```shell
+  ./gradlew :composeApp:run
+  ```
+- on Windows
+  ```shell
+  .\gradlew.bat :composeApp:run
+  ```
 
-### Setup Instructions
+### Build and Run Server
 
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd <repository-name>
-   ```
+To build and run the development version of the server, use the run configuration from the run widget
+in your IDE’s toolbar or run it directly from the terminal:
+- on macOS/Linux
+  ```shell
+  ./gradlew :server:run
+  ```
+- on Windows
+  ```shell
+  .\gradlew.bat :server:run
+  ```
 
-2. Build the project:
-   ```bash
-   # For Android
-   ./gradlew assembleDebug
-   
-   # For Desktop
-   ./gradlew run
-   
-   # For iOS (requires macOS and Xcode)
-   ./gradlew build
-   ```
+### Build and Run iOS Application
 
-### Using Android Studio/IntelliJ IDEA
+To build and run the development version of the iOS app, use the run configuration from the run widget
+in your IDE’s toolbar or open the [/iosApp](./iosApp) directory in Xcode and run it from there.
 
-1. Open the project in Android Studio or IntelliJ IDEA
-2. Import the Gradle project
-3. Wait for dependencies to download
-4. Run the application on your chosen target platform
+---
 
-## Architecture
-
-The application follows clean architecture principles:
-
-- **Presentation Layer**: Compose UI and ViewModels
-- **Domain Layer**: Business logic and use cases
-- **Data Layer**: Repository implementations and data sources
-
-## Technologies Used
-
-- Kotlin Multiplatform
-- Compose Multiplatform
-- Voyager (Navigation)
-- Koin (Dependency Injection)
-- Kotlin Coroutines
-- Kotlin DateTime
-
-## Data Models
-
-The application implements all data models as specified in the requirements:
-- User
-- Book
-- JournalEntry
-- Block (TextBlock, ImageBlock, etc.)
-- Media
-- Share
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
+Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
