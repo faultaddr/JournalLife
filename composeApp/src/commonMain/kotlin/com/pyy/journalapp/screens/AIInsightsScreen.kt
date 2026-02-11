@@ -3,8 +3,6 @@ package com.pyy.journalapp.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -63,10 +61,9 @@ fun AIInsightsScreen(
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.ShowChart,
-                                contentDescription = "Mood Trend",
-                                tint = MaterialTheme.colorScheme.primary
+                            Text(
+                                text = "📊", // 使用表情符号代替图标
+                                modifier = Modifier.size(24.dp)
                             )
                             Text(
                                 text = "情绪趋势",
@@ -97,10 +94,9 @@ fun AIInsightsScreen(
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.Tag,
-                                contentDescription = "Keywords",
-                                tint = MaterialTheme.colorScheme.primary
+                            Text(
+                                text = "🏷️", // 使用表情符号代替标签图标
+                                modifier = Modifier.size(24.dp)
                             )
                             Text(
                                 text = "关键词分析",
@@ -137,10 +133,9 @@ fun AIInsightsScreen(
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.Category,
-                                contentDescription = "Topics",
-                                tint = MaterialTheme.colorScheme.primary
+                            Text(
+                                text = "🗂️", // 使用表情符号代替分类图标
+                                modifier = Modifier.size(24.dp)
                             )
                             Text(
                                 text = "话题分布",
@@ -177,10 +172,9 @@ fun AIInsightsScreen(
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.Lightbulb,
-                                contentDescription = "Suggestions",
-                                tint = MaterialTheme.colorScheme.primary
+                            Text(
+                                text = "💡", // 使用表情符号代替灯泡图标
+                                modifier = Modifier.size(24.dp)
                             )
                             Text(
                                 text = "AI 建议",
@@ -229,10 +223,9 @@ fun AIInsightsScreen(
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.Analytics,
-                                contentDescription = "Writing Patterns",
-                                tint = MaterialTheme.colorScheme.primary
+                            Text(
+                                text = "📈", // 使用表情符号代替分析图标
+                                modifier = Modifier.size(24.dp)
                             )
                             Text(
                                 text = "写作模式",

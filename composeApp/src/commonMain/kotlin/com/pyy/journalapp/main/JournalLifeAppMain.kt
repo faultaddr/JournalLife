@@ -4,8 +4,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -120,15 +118,15 @@ fun JournalLifeAppMain() {
                 contentColor = Color.White,
                 navigationIcon = {
                     IconButton(onClick = { /* 主页菜单 */ }) {
-                        Icon(Icons.Default.Menu, contentDescription = "Menu")
+                        Text("☰", fontSize = 20.sp) // 菜单图标替代
                     }
                 },
                 actions = {
                     IconButton(onClick = { /* 搜索 */ }) {
-                        Icon(Icons.Default.Search, contentDescription = "Search")
+                        Text("🔍", fontSize = 20.sp) // 搜索图标替代
                     }
                     IconButton(onClick = { /* 设置 */ }) {
-                        Icon(Icons.Default.Settings, contentDescription = "Settings")
+                        Text("⚙️", fontSize = 20.sp) // 设置图标替代
                     }
                 }
             )
@@ -236,7 +234,7 @@ fun HomePage(
             FeatureCard(
                 title = "🧠 AI智能联想",
                 description = "自动分析日记内容，提供智能标签和写作建议",
-                icon = Icons.Default.AutoAwesome,
+                icon = "⚡", // 使用字符串表示图标
                 onClick = { onNavigateToSection(AppSection.AiInsights) },
                 color = Color(0xFFFFB74D)
             )
@@ -247,7 +245,7 @@ fun HomePage(
             FeatureCard(
                 title = "🎁 时光胶囊",
                 description = "将记忆封存到未来，与未来的自己对话",
-                icon = Icons.Default.Timer,
+                icon = "⏳", // 使用字符串表示图标
                 onClick = { onNavigateToSection(AppSection.TimeCapsule) },
                 color = Color(0xFF81C784)
             )
@@ -258,7 +256,7 @@ fun HomePage(
             FeatureCard(
                 title = "✍️ 情境化创作",
                 description = "基于当前情境，智能推荐写作模板",
-                icon = Icons.Default.Create,
+                icon = "📝", // 使用字符串表示图标
                 onClick = { onNavigateToSection(AppSection.ContextualWriting) },
                 color = Color(0xFF4FC3F7)
             )
@@ -326,7 +324,7 @@ fun AiInsightsPage(
                 modifier = Modifier.padding(bottom = 16.dp)
             ) {
                 IconButton(onClick = onBack) {
-                    Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                    Text("←", fontSize = 20.sp) // 返回箭头替代图标
                 }
                 Text(
                     text = "AI智能联想",
@@ -452,7 +450,7 @@ fun TimeCapsulePage(
                 modifier = Modifier.padding(bottom = 16.dp)
             ) {
                 IconButton(onClick = onBack) {
-                    Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                    Text("←", fontSize = 20.sp) // 返回箭头替代图标
                 }
                 Text(
                     text = "时光胶囊",
@@ -631,7 +629,7 @@ fun ContextualWritingPage(
                 modifier = Modifier.padding(bottom = 16.dp)
             ) {
                 IconButton(onClick = onBack) {
-                    Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                    Text("←", fontSize = 20.sp) // 返回箭头替代图标
                 }
                 Text(
                     text = "情境化创作",
@@ -802,7 +800,7 @@ fun EntryDetailPage(entry: JournalEntry, onBack: () -> Unit) {
                 modifier = Modifier.padding(bottom = 16.dp)
             ) {
                 IconButton(onClick = onBack) {
-                    Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                    Text("←", fontSize = 20.sp) // 返回箭头替代图标
                 }
                 Text(
                     text = "日记详情",
@@ -933,7 +931,7 @@ fun EntryDetailPage(entry: JournalEntry, onBack: () -> Unit) {
 }
 
 /**
- * 功能卡片组件
+ * 功能卡片组件 - 支持图像向量图标
  */
 @Composable
 fun FeatureCard(
@@ -960,6 +958,52 @@ fun FeatureCard(
                 icon,
                 contentDescription = null,
                 tint = color,
+                modifier = Modifier.size(32.dp)
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            Column {
+                Text(
+                    text = title,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = description,
+                    fontSize = 14.sp,
+                    color = Color.Gray
+                )
+            }
+        }
+    }
+}
+
+/**
+ * 功能卡片组件 - 支持文本图标（如emoji）
+ */
+@Composable
+fun FeatureCard(
+    title: String,
+    description: String,
+    icon: String,  // 文本图标，例如emoji
+    onClick: () -> Unit,
+    color: Color = Color.LightGray
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+            .clickable { onClick() },
+        elevation = 4.dp
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text(
+                text = icon,
+                fontSize = 24.sp,
                 modifier = Modifier.size(32.dp)
             )
             Spacer(modifier = Modifier.width(16.dp))
