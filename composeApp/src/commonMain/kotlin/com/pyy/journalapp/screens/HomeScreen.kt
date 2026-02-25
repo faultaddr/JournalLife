@@ -18,11 +18,16 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.pyy.journalapp.models.Book
 import com.pyy.journalapp.models.JournalEntry
 import com.pyy.journalapp.models.Visibility
 import com.pyy.journalapp.ui.theme.JournalAppTheme
+import com.pyy.journalapp.components.ContributionHeatmap
+import com.pyy.journalapp.components.generateMockContributions
+import com.pyy.journalapp.components.bookshelf.Bookshelf
+import com.pyy.journalapp.components.bookshelf.BookOpenAnimation
 import kotlinx.datetime.LocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,107 +44,119 @@ fun HomeScreen(
     val streakDays = remember(books) { 7 } // 模拟连续记录天数
     val timeCapsules = remember(books) { 2 } // 模拟时光胶囊数量
 
+    // 书架动画状态
+    var selectedBook by remember { mutableStateOf<Book?>(null) }
+    var isBookOpen by remember { mutableStateOf(false) }
+
+    // 处理书本点击 - 先打开动画，然后导航
+    val handleBookClick = { book: Book ->
+        selectedBook = book
+        isBookOpen = true
+    }
+
+    // 处理关闭书本
+    val handleCloseBook = {
+        isBookOpen = false
+        // 延迟清空选中书本，等待动画完成
+        // 使用简单的延迟逻辑
+        selectedBook = null
+    }
+
     JournalAppTheme {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Text(
-                            text = "Journal Life",
-                            style = MaterialTheme.typography.titleLarge.copy(
-                                fontWeight = FontWeight.Bold
+        Box(modifier = Modifier.fillMaxSize()) {
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        title = {
+                            Text(
+                                text = "Journal Life",
+                                style = MaterialTheme.typography.titleLarge.copy(
+                                    fontWeight = FontWeight.Bold
+                                )
                             )
+                        },
+                        actions = {
+                            TextButton(onClick = onSettingsClick) {
+                                Text("⚙", fontSize = androidx.compose.ui.unit.TextUnit(20F, androidx.compose.ui.unit.TextUnitType.Sp))
+                            }
+                        },
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = MaterialTheme.colorScheme.background
                         )
-                    },
-                    actions = {
-                        TextButton(onClick = onSettingsClick) {
-                            Text("⚙", fontSize = androidx.compose.ui.unit.TextUnit(20F, androidx.compose.ui.unit.TextUnitType.Sp))
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.background
                     )
-                )
-            },
-            floatingActionButton = {
-                ExtendedFloatingActionButton(
-                    onClick = onAddBookClick
-                ) {
-                    Text("+ 新建书册")
-                }
-            }
-        ) { paddingValues ->
-            LazyColumn(
-                modifier = modifier
-                    .padding(paddingValues)
-                    .fillMaxSize(),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                // 欢迎区域
-                item {
-                    WelcomeHeader(
-                        userName = "日记爱好者",
-                        streakDays = streakDays
-                    )
-                }
-
-                // 快速统计
-                item {
-                    QuickStatsRow(
-                        totalBooks = books.size,
-                        totalEntries = totalEntries,
-                        streakDays = streakDays,
-                        timeCapsules = timeCapsules
-                    )
-                }
-
-                // 最近活动标题
-                item {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                },
+                floatingActionButton = {
+                    ExtendedFloatingActionButton(
+                        onClick = onAddBookClick
                     ) {
-                        Text(
-                            text = "我的书册",
-                            style = MaterialTheme.typography.titleMedium.copy(
-                                fontWeight = FontWeight.Bold
-                            )
-                        )
-
-                        // 筛选标签
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            FilterChip(
-                                selected = true,
-                                onClick = { },
-                                label = { Text("全部") }
-                            )
-                            FilterChip(
-                                selected = false,
-                                onClick = { },
-                                label = { Text("公开") }
-                            )
-                        }
+                        Text("+ 新建书册")
                     }
                 }
-
-                // 书册列表或空状态
-                if (books.isEmpty()) {
+            ) { paddingValues ->
+                LazyColumn(
+                    modifier = modifier
+                        .padding(paddingValues)
+                        .fillMaxSize(),
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    // 欢迎区域
                     item {
-                        EmptyState(onAddBookClick = onAddBookClick)
+                        WelcomeHeader(
+                            userName = "日记爱好者",
+                            streakDays = streakDays
+                        )
                     }
-                } else {
-                    items(books) { book ->
-                        BookCard(
-                            book = book,
-                            onClick = { onBookClick(book) }
+
+                    // 快速统计
+                    item {
+                        QuickStatsRow(
+                            totalBooks = books.size,
+                            totalEntries = totalEntries,
+                            streakDays = streakDays,
+                            timeCapsules = timeCapsules
+                        )
+                    }
+
+                    // 记录频率热图
+                    item {
+                        val mockEntries = remember { generateMockContributions() }
+                        ContributionHeatmap(
+                            entries = mockEntries,
+                            weeksToShow = 14
+                        )
+                    }
+
+                    // 书架区域
+                    item {
+                        Bookshelf(
+                            books = books,
+                            selectedBook = selectedBook,
+                            onBookClick = handleBookClick
                         )
                     }
                 }
             }
+
+            // 书本打开动画层（覆盖在最上层）
+            BookOpenAnimation(
+                book = selectedBook,
+                isOpen = isBookOpen,
+                onClose = handleCloseBook,
+                content = {
+                    // 书本打开后的内容
+                    selectedBook?.let { book ->
+                        OpenBookContent(
+                            book = book,
+                            onEnterBook = {
+                                // 关闭动画后导航到详情页
+                                isBookOpen = false
+                                onBookClick(book)
+                            }
+                        )
+                    }
+                }
+            )
         }
     }
 }
@@ -321,144 +338,6 @@ private fun StatCard(
 }
 
 @Composable
-private fun BookCard(
-    book: Book,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    // 为每个书册生成一个固定的渐变色
-    val gradientColors = remember(book.id) {
-        getGradientForBook(book.id)
-    }
-
-    Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable { onClick() }
-            .shadow(
-                elevation = 8.dp,
-                shape = RoundedCornerShape(20.dp),
-                spotColor = gradientColors[0].copy(alpha = 0.3f)
-            ),
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
-    ) {
-        Column(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            // 渐变顶部区域
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp)
-                    .background(
-                        brush = Brush.linearGradient(
-                            colors = gradientColors,
-                            start = androidx.compose.ui.geometry.Offset(0f, 0f),
-                            end = androidx.compose.ui.geometry.Offset(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)
-                        )
-                    )
-                    .padding(16.dp)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Top
-                ) {
-                    // 书册图标
-                    Box(
-                        modifier = Modifier
-                            .size(48.dp)
-                            .clip(CircleShape)
-                            .background(Color.White.copy(alpha = 0.25f)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "📖",
-                            fontSize = androidx.compose.ui.unit.TextUnit(24F, androidx.compose.ui.unit.TextUnitType.Sp)
-                        )
-                    }
-
-                    // 隐私状态
-                    val visibility = book.visibilityDefault
-                    Surface(
-                        color = if (visibility == Visibility.PUBLIC)
-                            Color(0xFF4CAF50).copy(alpha = 0.9f)
-                        else
-                            Color(0xFF9E9E9E).copy(alpha = 0.9f),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
-                        ) {
-                            Text(
-                                text = if (visibility == Visibility.PUBLIC) "🌐" else "🔒",
-                                fontSize = androidx.compose.ui.unit.TextUnit(12F, androidx.compose.ui.unit.TextUnitType.Sp)
-                            )
-                            Text(
-                                text = if (visibility == Visibility.PUBLIC) "公开" else "私密",
-                                style = MaterialTheme.typography.labelSmall,
-                                color = Color.White
-                            )
-                        }
-                    }
-                }
-            }
-
-            // 书册信息
-            Column(
-                modifier = Modifier.padding(16.dp)
-            ) {
-                Text(
-                    text = book.title,
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.Bold
-                    ),
-                    maxLines = 1
-                )
-
-                val description = book.description
-                if (description != null) {
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = description,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        maxLines = 2
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // 底部信息
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "${book.entriesCount} 篇日记",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-
-                    Text(
-                        text = formatDate(book.updatedAt),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
 private fun EmptyState(
     onAddBookClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -545,3 +424,67 @@ private val Book.entriesCount: Int
 
 private val kotlin.Int.absoluteValue: Int
     get() = if (this < 0) -this else this
+
+/**
+ * 书本打开后的内容显示
+ */
+@Composable
+private fun OpenBookContent(
+    book: Book,
+    onEnterBook: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Text(
+            text = "最新日记",
+            style = MaterialTheme.typography.titleMedium.copy(
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        )
+
+        // 模拟日记列表
+        repeat(3) { index ->
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.6f)
+                ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Text(
+                        text = "日记条目 #${index + 1}",
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontWeight = FontWeight.Medium
+                        )
+                    )
+                    Text(
+                        text = "这是日记的预览内容，展示最近记录的日记...",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        // 进入书册按钮
+        Button(
+            onClick = onEnterBook,
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(8.dp)
+        ) {
+            Text("📖 进入书册")
+        }
+    }
+}
