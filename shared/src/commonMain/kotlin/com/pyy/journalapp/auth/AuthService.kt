@@ -3,32 +3,29 @@ package com.pyy.journalapp.auth
 import com.pyy.journalapp.repository.JournalRepository
 import com.pyy.journalapp.models.User
 import com.pyy.journalapp.models.UserSettings
+import com.pyy.journalapp.utils.DateTimeUtils
 import com.pyy.journalapp.utils.IdGenerator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
-import kotlin.time.ExperimentalTime
 
-class AuthService(private val journalRepository: JournalRepository) {
+open class AuthService(private val journalRepository: JournalRepository) {
     private val _currentUser = MutableStateFlow<User?>(null)
     val currentUser: StateFlow<User?> = _currentUser
 
     private val _authState = MutableStateFlow(AuthState.NOT_AUTHENTICATED)
     val authState: StateFlow<AuthState> = _authState
 
-    @OptIn(ExperimentalTime::class)
     suspend fun register(email: String, password: String, displayName: String): Result<User> {
         return try {
             // In a real app, you would hash the password and store it securely
             // For MVP, we'll just create a user without password storage
             val userId = IdGenerator.generateId()
+            val now = DateTimeUtils.now()
             val newUser = User(
                 id = userId,
                 email = email,
                 displayName = displayName,
-                createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+                createdAt = now,
                 settings = UserSettings()
             )
 

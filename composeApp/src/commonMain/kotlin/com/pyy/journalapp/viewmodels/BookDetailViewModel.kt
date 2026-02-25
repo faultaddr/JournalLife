@@ -9,9 +9,10 @@ import com.pyy.journalapp.utils.IdGenerator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import com.pyy.journalapp.utils.DateTimeUtils
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 class BookDetailViewModel(
     private val journalRepository: JournalRepository,
     private val authService: AuthService

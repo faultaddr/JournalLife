@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.pyy.journalapp.auth.AuthService
 import com.pyy.journalapp.repository.JournalRepository
 import com.pyy.journalapp.models.Book
+import com.pyy.journalapp.utils.DateTimeUtils
 import com.pyy.journalapp.utils.IdGenerator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -62,8 +63,8 @@ class HomeViewModel(
                         ownerId = currentUser.id,
                         title = title,
                         description = description,
-                        createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-                        updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                        createdAt = DateTimeUtils.now(),
+                        updatedAt = DateTimeUtils.now()
                     )
 
                     journalRepository.createBook(newBook)

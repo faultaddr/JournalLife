@@ -54,8 +54,8 @@ class JournalEditorViewModel(
                         ownerId = currentUser.id,
                         bookId = bookId,
                         title = title,
-                        createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-                        updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+                        createdAt = kotlin.time.Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+                        updatedAt = kotlin.time.Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
                         blocks = emptyList()
                     )
 
@@ -73,7 +73,7 @@ class JournalEditorViewModel(
         if (currentJournal != null) {
             val updatedJournal = currentJournal.copy(
                 title = title,
-                updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                updatedAt = kotlin.time.Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
             )
             _journal.value = updatedJournal
         }
@@ -86,7 +86,7 @@ class JournalEditorViewModel(
             updatedBlocks[index] = block
             val updatedJournal = currentJournal.copy(
                 blocks = updatedBlocks,
-                updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                updatedAt = kotlin.time.Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
             )
             _journal.value = updatedJournal
         }
@@ -99,7 +99,7 @@ class JournalEditorViewModel(
             updatedBlocks.add(block)
             val updatedJournal = currentJournal.copy(
                 blocks = updatedBlocks,
-                updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                updatedAt = kotlin.time.Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
             )
             _journal.value = updatedJournal
         }
@@ -112,7 +112,7 @@ class JournalEditorViewModel(
             updatedBlocks.removeAt(index)
             val updatedJournal = currentJournal.copy(
                 blocks = updatedBlocks,
-                updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                updatedAt = kotlin.time.Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
             )
             _journal.value = updatedJournal
         }

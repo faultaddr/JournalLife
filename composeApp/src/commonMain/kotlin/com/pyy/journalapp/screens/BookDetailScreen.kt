@@ -20,7 +20,8 @@ fun BookDetailScreen(
     journalEntries: List<JournalEntry>,
     onJournalClick: (JournalEntry) -> Unit,
     onAddJournalClick: () -> Unit,
-    onExportImagesClick: () -> Unit = {}, // 新增导出图片功能
+    onBackClick: () -> Unit,  // 添加返回回调
+    onExportImagesClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     JournalAppTheme {
@@ -29,28 +30,26 @@ fun BookDetailScreen(
                 TopAppBar(
                     title = { Text(bookTitle) },
                     navigationIcon = {
-                        IconButton(onClick = { /* Navigate back */ }) {
-                            Text("<-") // 返回图标作为文本
+                        TextButton(onClick = onBackClick) {
+                            Text("← 返回", color = MaterialTheme.colorScheme.primary)
                         }
                     },
                     actions = {
-                        // 导出图片按钮
-                        IconButton(onClick = onExportImagesClick) {
-                            Text("📤") // 导出图片图标
+                        TextButton(onClick = onExportImagesClick) {
+                            Text("分享", color = MaterialTheme.colorScheme.primary)
                         }
-
-                        IconButton(onClick = onAddJournalClick) {
-                            Text("➕") // 更好的加号图标
+                        TextButton(onClick = onAddJournalClick) {
+                            Text("添加", color = MaterialTheme.colorScheme.primary)
                         }
                     }
                 )
             },
             floatingActionButton = {
                 ExtendedFloatingActionButton(
-                    onClick = onAddJournalClick,
-                    icon = { Text("📝") }, // 笔记图标
-                    text = { Text("新建日记") }
-                )
+                    onClick = onAddJournalClick
+                ) {
+                    Text("✎ 新建日记")
+                }
             }
         ) { paddingValues ->
             if (journalEntries.isEmpty()) {

@@ -1,18 +1,14 @@
 package com.pyy.journalapp.timemachine
 
 import com.pyy.journalapp.models.JournalEntry
+import com.pyy.journalapp.utils.DateTimeUtils
 import com.pyy.journalapp.utils.IdGenerator
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import kotlin.random.Random
-import kotlin.time.ExperimentalTime
 
 /**
  * 时光胶囊功能类，用于定时发送过去的内容到未来
  */
-@OptIn(ExperimentalStdlibApi::class, ExperimentalTime::class)
 class TimeCapsuleManager {
 
     /**
@@ -25,7 +21,7 @@ class TimeCapsuleManager {
             id = IdGenerator.generateId(),
             originalEntry = entry,
             targetDate = targetDate,
-            creationDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
+            creationDate = DateTimeUtils.today(),
             status = CapsuleStatus.ACTIVE
         )
     }
@@ -53,15 +49,15 @@ class TimeCapsuleManager {
      * 获取当前时间戳
      */
     private fun getTimeMillis(): Long {
-        return Clock.System.now().toEpochMilliseconds()
+        return DateTimeUtils.currentTimeMillis()
     }
 
     /**
      * 获取即将到期的时光胶囊
      */
     fun getUpcomingCapsules(capsules: List<TimeCapsule>, daysAhead: Int = 7): List<TimeCapsule> {
-        val currentDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
-        val targetDate = addDaysToDate(currentDate, daysAhead)
+        val currentDate = DateTimeUtils.today()
+        val targetDate = DateTimeUtils.addDays(currentDate, daysAhead)
 
         return capsules.filter { capsule ->
             capsule.status == CapsuleStatus.ACTIVE &&
@@ -74,12 +70,7 @@ class TimeCapsuleManager {
      * 添加天数到日期
      */
     private fun addDaysToDate(date: LocalDate, daysToAdd: Int): LocalDate {
-        // 简单的日期加法实现，不考虑闰年等复杂情况
-        var resultDate = date
-        repeat(daysToAdd) {
-            resultDate = resultDate.nextDay()
-        }
-        return resultDate
+        return DateTimeUtils.addDays(date, daysToAdd)
     }
 
     /**
@@ -113,54 +104,16 @@ class TimeCapsuleManager {
      * 计算距离时光胶囊到期的天数
      */
     fun daysUntilCapsule(capsule: TimeCapsule): Int {
-        val currentDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+        val currentDate = DateTimeUtils.today()
 
         // 如果目标日期小于当前日期，则返回0
         if (capsule.targetDate <= currentDate) {
             return 0
         }
 
-        // 简化的天数计算
-        val diff = (capsule.targetDate.toEpochDays() - currentDate.toEpochDays()).toInt()
-        return if (diff < 0) -diff else diff // 手动实现绝对值
+        // 使用 DateTimeUtils 计算天数差
+        return DateTimeUtils.daysBetween(currentDate, capsule.targetDate)
     }
-}
-
-/**
- * 为LocalDate扩展nextDay方法
- */
-private fun LocalDate.nextDay(): LocalDate {
-    val nextDay = this.dayOfMonth + 1
-
-    // 检查是否到了下个月
-    if (nextDay > daysInMonth(this)) {
-        if (this.monthNumber == 12) { // 年底情况
-            return LocalDate(this.year + 1, 1, 1)
-        } else { // 普通月份切换
-            return LocalDate(this.year, this.monthNumber + 1, 1)
-        }
-    }
-
-    return LocalDate(this.year, this.month, nextDay)
-}
-
-/**
- * 返回给定月份的天数
- */
-private fun daysInMonth(date: LocalDate): Int {
-    return when (date.monthNumber) {
-        1, 3, 5, 7, 8, 10, 12 -> 31
-        4, 6, 9, 11 -> 30
-        2 -> if (isLeapYear(date.year)) 29 else 28
-        else -> 30
-    }
-}
-
-/**
- * 判断是否是闰年
- */
-private fun isLeapYear(year: Int): Boolean {
-    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)
 }
 
 /**

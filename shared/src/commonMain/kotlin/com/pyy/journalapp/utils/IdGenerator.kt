@@ -1,6 +1,5 @@
 package com.pyy.journalapp.utils
 
-import kotlinx.datetime.Clock
 import kotlin.random.Random
 
 /**
@@ -11,7 +10,7 @@ object IdGenerator {
      * 生成唯一的ID
      */
     fun generateId(): String {
-        val timestamp = Clock.System.now().toEpochMilliseconds()
+        val timestamp = DateTimeUtils.currentTimeMillis()
         val randomPart = Random.nextLong(1000000)
         return "${timestamp}_${randomPart}"
     }

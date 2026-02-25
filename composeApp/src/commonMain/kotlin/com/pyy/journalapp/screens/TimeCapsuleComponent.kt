@@ -1,6 +1,7 @@
 package com.pyy.journalapp.screens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -8,8 +9,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.pyy.journalapp.timemachine.TimeCapsule
 import com.pyy.journalapp.timemachine.CapsuleStatus
+import com.pyy.journalapp.utils.DateTimeUtils
 import kotlinx.datetime.LocalDate
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimeCapsuleCreator(
     onTimeCapsuleCreated: (LocalDate) -> Unit,
@@ -88,11 +91,7 @@ fun TimeCapsuleCreator(
                         TextButton(
                             onClick = {
                                 // 使用当前日期加30天作为示例
-                                val futureDate = kotlinx.datetime.Clock.System.now()
-                                    .plus(30 * 24 * 60 * 60 * 1000_000_000L) // 30天后
-                                    .toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault())
-                                    .date
-                                selectedDate = futureDate
+                                selectedDate = DateTimeUtils.addDays(DateTimeUtils.today(), 30)
                                 showDatePicker = false
                             }
                         ) {

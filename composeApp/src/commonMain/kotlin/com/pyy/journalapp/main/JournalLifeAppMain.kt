@@ -1,15 +1,28 @@
 package com.pyy.journalapp.main
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pyy.journalapp.core.JournalLifeCore
@@ -18,12 +31,13 @@ import com.pyy.journalapp.models.Visibility
 import com.pyy.journalapp.templates.Mood
 import com.pyy.journalapp.templates.Season
 import com.pyy.journalapp.templates.WritingContext
-import kotlinx.datetime.*
+import com.pyy.journalapp.utils.DateTimeUtils
 
 /**
  * JournalLifeApp 主界面
  * 展示AI智能联想、时光胶囊和情境化创作三大核心功能
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JournalLifeAppMain() {
     MaterialTheme {
@@ -43,15 +57,15 @@ fun JournalLifeAppMain() {
                     ownerId = "user-1",
                     bookId = "book-1",
                     title = "AI智能联想初体验",
-                    createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-                    updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+                    createdAt = DateTimeUtils.now(),
+                    updatedAt = DateTimeUtils.now(),
                     visibility = Visibility.PUBLIC,
                     tags = listOf("AI", "体验", "智能"),
                     blocks = listOf(
                         TextBlock(
                             id = "text-1",
-                            createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-                            updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+                            createdAt = DateTimeUtils.now(),
+                            updatedAt = DateTimeUtils.now(),
                             orderIndex = 0,
                             text = "今天第一次使用AI智能联想到功能，感觉非常神奇！系统能够自动分析我的日记内容，并给出相关的标签和建议。",
                             format = TextFormat.PLAIN
@@ -63,15 +77,23 @@ fun JournalLifeAppMain() {
                     ownerId = "user-1",
                     bookId = "book-1",
                     title = "时光胶囊：给未来的自己",
-                    createdAt = Clock.System.now().minus(1.days).toLocalDateTime(TimeZone.currentSystemDefault()),
-                    updatedAt = Clock.System.now().minus(1.days).toLocalDateTime(TimeZone.currentSystemDefault()),
+                    createdAt = DateTimeUtils.addDays(DateTimeUtils.today(), -1).let { date ->
+                        kotlinx.datetime.LocalDateTime(date.year, date.month, date.dayOfMonth, 0, 0)
+                    },
+                    updatedAt = DateTimeUtils.addDays(DateTimeUtils.today(), -1).let { date ->
+                        kotlinx.datetime.LocalDateTime(date.year, date.month, date.dayOfMonth, 0, 0)
+                    },
                     visibility = Visibility.PRIVATE,
                     tags = listOf("时光胶囊", "未来", "期望"),
                     blocks = listOf(
                         TextBlock(
                             id = "text-2",
-                            createdAt = Clock.System.now().minus(1.days).toLocalDateTime(TimeZone.currentSystemDefault()),
-                            updatedAt = Clock.System.now().minus(1.days).toLocalDateTime(TimeZone.currentSystemDefault()),
+                            createdAt = DateTimeUtils.addDays(DateTimeUtils.today(), -1).let { date ->
+                                kotlinx.datetime.LocalDateTime(date.year, date.month, date.dayOfMonth, 0, 0)
+                            },
+                            updatedAt = DateTimeUtils.addDays(DateTimeUtils.today(), -1).let { date ->
+                                kotlinx.datetime.LocalDateTime(date.year, date.month, date.dayOfMonth, 0, 0)
+                            },
                             orderIndex = 0,
                             text = "亲爱的未来的自己，现在的我对未来充满期待。希望一年后的你已经实现了现在的梦想。",
                             format = TextFormat.PLAIN
@@ -83,15 +105,23 @@ fun JournalLifeAppMain() {
                     ownerId = "user-1",
                     bookId = "book-1",
                     title = "旅行日记：智能模板推荐",
-                    createdAt = Clock.System.now().minus(2.days).toLocalDateTime(TimeZone.currentSystemDefault()),
-                    updatedAt = Clock.System.now().minus(2.days).toLocalDateTime(TimeZone.currentSystemDefault()),
+                    createdAt = DateTimeUtils.addDays(DateTimeUtils.today(), -2).let { date ->
+                        kotlinx.datetime.LocalDateTime(date.year, date.month, date.dayOfMonth, 0, 0)
+                    },
+                    updatedAt = DateTimeUtils.addDays(DateTimeUtils.today(), -2).let { date ->
+                        kotlinx.datetime.LocalDateTime(date.year, date.month, date.dayOfMonth, 0, 0)
+                    },
                     visibility = Visibility.PUBLIC,
                     tags = listOf("旅行", "模板", "推荐"),
                     blocks = listOf(
                         TextBlock(
                             id = "text-3",
-                            createdAt = Clock.System.now().minus(2.days).toLocalDateTime(TimeZone.currentSystemDefault()),
-                            updatedAt = Clock.System.now().minus(2.days).toLocalDateTime(TimeZone.currentSystemDefault()),
+                            createdAt = DateTimeUtils.addDays(DateTimeUtils.today(), -2).let { date ->
+                                kotlinx.datetime.LocalDateTime(date.year, date.month, date.dayOfMonth, 0, 0)
+                            },
+                            updatedAt = DateTimeUtils.addDays(DateTimeUtils.today(), -2).let { date ->
+                                kotlinx.datetime.LocalDateTime(date.year, date.month, date.dayOfMonth, 0, 0)
+                            },
                             orderIndex = 0,
                             text = "今天去了向往已久的城市，体验了当地的文化和美食。",
                             format = TextFormat.PLAIN
@@ -103,7 +133,7 @@ fun JournalLifeAppMain() {
             // 创建一些示例时光胶囊
             val newCapsule = journalLifeCore.createTimeCapsule(
                 journalEntries[1],
-                Clock.System.now().plus(365.days).toLocalDateTime(TimeZone.currentSystemDefault()).date
+                DateTimeUtils.addDays(DateTimeUtils.today(), 365)
             )
             timeCapsules = listOf(newCapsule)
         }
@@ -114,8 +144,12 @@ fun JournalLifeAppMain() {
             // 顶部导航栏
             TopAppBar(
                 title = { Text("JournalLifeApp", fontSize = 20.sp) },
-                backgroundColor = Color(0xFF6200EE),
-                contentColor = Color.White,
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color(0xFF6200EE),
+                    titleContentColor = Color.White,
+                    navigationIconContentColor = Color.White,
+                    actionIconContentColor = Color.White
+                ),
                 navigationIcon = {
                     IconButton(onClick = { /* 主页菜单 */ }) {
                         Text("☰", fontSize = 20.sp) // 菜单图标替代
@@ -283,9 +317,7 @@ fun HomePage(
         }
 
         // 即将到期的时光胶囊
-        val upcomingCapsules = remember {
-            journalLifeCore.getUpcomingTimeCapsules(timeCapsules, 30)
-        }
+        val upcomingCapsules = journalLifeCore.getUpcomingTimeCapsules(timeCapsules, 30)
 
         if (upcomingCapsules.isNotEmpty()) {
             item {
@@ -351,7 +383,7 @@ fun AiInsightsPage(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp),
-                    elevation = 4.dp
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                 ) {
                     Column(
                         modifier = Modifier.padding(16.dp)
@@ -402,7 +434,7 @@ fun AiInsightsPage(
 
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                elevation = 4.dp
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp)
@@ -470,7 +502,7 @@ fun TimeCapsulePage(
 
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                elevation = 4.dp
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp)
@@ -503,7 +535,7 @@ fun TimeCapsulePage(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     val targetDate = remember {
-                        Clock.System.now().plus(365.days).toLocalDateTime(TimeZone.currentSystemDefault()).date
+                        DateTimeUtils.addDays(DateTimeUtils.today(), 365)
                     }
 
                     Text(
@@ -543,7 +575,7 @@ fun TimeCapsulePage(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp),
-                    elevation = 2.dp
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                 ) {
                     Text(
                         text = "还没有创建时光胶囊，点击上方按钮开始创建第一个胶囊吧！",
@@ -564,7 +596,7 @@ fun TimeCapsulePage(
                 modifier = Modifier.padding(vertical = 16.dp)
             )
 
-            val currentDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+            val currentDate = DateTimeUtils.today()
             val anniversaries = remember {
                 journalLifeCore.getAnniversaryEntries(journalEntries, currentDate)
             }
@@ -575,7 +607,7 @@ fun TimeCapsulePage(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 4.dp),
-                        elevation = 2.dp
+                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                     ) {
                         Column(
                             modifier = Modifier.padding(12.dp)
@@ -651,42 +683,36 @@ fun ContextualWritingPage(
         item {
             Text("当前情绪:", fontWeight = FontWeight.Medium)
             Spacer(modifier = Modifier.height(8.dp))
-            FlowRow(
+            Row(
                 modifier = Modifier.fillMaxWidth(),
-                mainAxisSize = SizeMode.Expand,
-                mainAxisAlignment = MainAxisAlignment.Start,
-                crossAxisAlignment = CrossAxisAlignment.Center,
-                children = {
-                    Mood.values().forEach { mood ->
-                        ChoiceChip(
-                            text = mood.name,
-                            isSelected = selectedMood == mood,
-                            onClick = { selectedMood = mood }
-                        )
-                    }
+                horizontalArrangement = Arrangement.Start
+            ) {
+                Mood.values().forEach { mood ->
+                    ChoiceChip(
+                        text = mood.name,
+                        isSelected = selectedMood == mood,
+                        onClick = { selectedMood = mood }
+                    )
                 }
-            )
+            }
         }
 
         item {
             Spacer(modifier = Modifier.height(16.dp))
             Text("当前季节:", fontWeight = FontWeight.Medium)
             Spacer(modifier = Modifier.height(8.dp))
-            FlowRow(
+            Row(
                 modifier = Modifier.fillMaxWidth(),
-                mainAxisSize = SizeMode.Expand,
-                mainAxisAlignment = MainAxisAlignment.Start,
-                crossAxisAlignment = CrossAxisAlignment.Center,
-                children = {
-                    Season.values().forEach { season ->
-                        ChoiceChip(
-                            text = season.name,
-                            isSelected = selectedSeason == season,
-                            onClick = { selectedSeason = season }
-                        )
-                    }
+                horizontalArrangement = Arrangement.Start
+            ) {
+                Season.values().forEach { season ->
+                    ChoiceChip(
+                        text = season.name,
+                        isSelected = selectedSeason == season,
+                        onClick = { selectedSeason = season }
+                    )
                 }
-            )
+            }
         }
 
         item {
@@ -726,7 +752,7 @@ fun ContextualWritingPage(
 
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                elevation = 4.dp
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp)
@@ -863,7 +889,7 @@ fun EntryDetailPage(entry: JournalEntry, onBack: () -> Unit) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(200.dp),
-                        elevation = 2.dp
+                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                     ) {
                         Box(
                             contentAlignment = Alignment.Center
@@ -879,7 +905,7 @@ fun EntryDetailPage(entry: JournalEntry, onBack: () -> Unit) {
                             text = caption,
                             fontSize = 14.sp,
                             color = Color.Gray,
-                            fontStyle = androidx.compose.ui.text.style.FontStyle.Italic,
+                            fontStyle = FontStyle.Italic,
                             modifier = Modifier.padding(top = 4.dp)
                         )
                     }
@@ -902,8 +928,8 @@ fun EntryDetailPage(entry: JournalEntry, onBack: () -> Unit) {
                 is QuoteBlock -> {
                     Card(
                         modifier = Modifier.fillMaxWidth(),
-                        elevation = 1.dp,
-                        backgroundColor = Color(0xFFF5F5F5)
+                        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+                        colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5))
                     ) {
                         Column(
                             modifier = Modifier.padding(12.dp)
@@ -911,7 +937,7 @@ fun EntryDetailPage(entry: JournalEntry, onBack: () -> Unit) {
                             Text(
                                 text = "\"${block.text}\"",
                                 fontSize = 16.sp,
-                                fontStyle = androidx.compose.ui.text.style.FontStyle.Italic
+                                fontStyle = FontStyle.Italic
                             )
                             block.author?.let { author ->
                                 Text(
@@ -924,6 +950,11 @@ fun EntryDetailPage(entry: JournalEntry, onBack: () -> Unit) {
                             }
                         }
                     }
+                }
+                is DividerBlock -> {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    androidx.compose.material3.Divider()
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
         }
@@ -946,7 +977,7 @@ fun FeatureCard(
             .fillMaxWidth()
             .padding(vertical = 8.dp)
             .clickable { onClick() },
-        elevation = 4.dp
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -993,7 +1024,7 @@ fun FeatureCard(
             .fillMaxWidth()
             .padding(vertical = 8.dp)
             .clickable { onClick() },
-        elevation = 4.dp
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -1035,7 +1066,7 @@ fun EntryCard(entry: JournalEntry, onClick: () -> Unit, journalLifeCore: Journal
             .fillMaxWidth()
             .padding(vertical = 4.dp)
             .clickable { onClick() },
-        elevation = 2.dp
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
             modifier = Modifier.padding(12.dp)
@@ -1092,7 +1123,7 @@ fun CapsuleCard(capsule: com.pyy.journalapp.timemachine.TimeCapsule) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp),
-        elevation = 2.dp
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
             modifier = Modifier.padding(12.dp)
@@ -1132,9 +1163,9 @@ fun ChoiceChip(text: String, isSelected: Boolean, onClick: () -> Unit) {
     Button(
         onClick = onClick,
         colors = if (isSelected) {
-            ButtonDefaults.buttonColors(backgroundColor = Color(0xFF6200EE))
+            ButtonDefaults.buttonColors(containerColor = Color(0xFF6200EE))
         } else {
-            ButtonDefaults.buttonColors(backgroundColor = Color.LightGray)
+            ButtonDefaults.buttonColors(containerColor = Color.LightGray)
         },
         modifier = Modifier.padding(end = 8.dp)
     ) {
@@ -1150,30 +1181,4 @@ fun ChoiceChip(text: String, isSelected: Boolean, onClick: () -> Unit) {
  */
 enum class AppSection {
     Home, AiInsights, TimeCapsule, ContextualWriting, EntryDetail
-}
-
-/**
- * 流式布局组件
- */
-@Composable
-fun FlowRow(
-    modifier: Modifier = Modifier,
-    mainAxisSize: SizeMode = SizeMode.Wrap,
-    mainAxisAlignment: MainAxisAlignment = MainAxisAlignment.Start,
-    crossAxisAlignment: CrossAxisAlignment = CrossAxisAlignment.Center,
-    children: @Composable () -> Unit
-) {
-    androidx.compose.foundation.layout.FlowRow(
-        modifier = modifier,
-        maxItemsInEachRow = Int.MAX_VALUE,
-        itemSpacing = 8.dp,
-        children = children
-    )
-}
-
-/**
- * 尺寸模式枚举
- */
-enum class SizeMode {
-    Wrap, Expand
 }

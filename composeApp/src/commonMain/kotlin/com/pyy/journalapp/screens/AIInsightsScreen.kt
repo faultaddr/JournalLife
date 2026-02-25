@@ -2,6 +2,7 @@ package com.pyy.journalapp.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -149,7 +150,18 @@ fun AIInsightsScreen(
                             items(sampleTopics) { topic ->
                                 InputChip(
                                     onClick = { /* Handle topic click */ },
-                                    label = { Text(topic) }
+                                    label = { Text(topic) },
+                                    selected = TODO(),
+                                    modifier = TODO(),
+                                    enabled = TODO(),
+                                    leadingIcon = TODO(),
+                                    avatar = TODO(),
+                                    trailingIcon = TODO(),
+                                    shape = TODO(),
+                                    colors = TODO(),
+                                    elevation = TODO(),
+                                    border = TODO(),
+                                    interactionSource = TODO()
                                 )
                             }
                         }

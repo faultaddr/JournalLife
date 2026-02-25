@@ -129,7 +129,18 @@ fun AISuggestionPanel(
                     items(contentAnalysis.suggestions) { suggestion ->
                         InputChip(
                             onClick = { onSuggestionClick(suggestion) },
-                            label = { Text(suggestion) }
+                            label = { Text(suggestion) },
+                            selected = TODO(),
+                            modifier = TODO(),
+                            enabled = TODO(),
+                            leadingIcon = TODO(),
+                            avatar = TODO(),
+                            trailingIcon = TODO(),
+                            shape = TODO(),
+                            colors = TODO(),
+                            elevation = TODO(),
+                            border = TODO(),
+                            interactionSource = TODO()
                         )
                     }
                 }

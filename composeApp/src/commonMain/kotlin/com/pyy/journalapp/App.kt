@@ -1,10 +1,17 @@
 package com.pyy.journalapp
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -19,6 +26,7 @@ import com.pyy.journalapp.ai.AISuggestionEngine
 import com.pyy.journalapp.timemachine.TimeCapsuleManager
 import com.pyy.journalapp.templates.TemplateManager
 import com.pyy.journalapp.core.JournalLifeCore
+import com.pyy.journalapp.utils.DateTimeUtils
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
 
@@ -230,15 +238,10 @@ fun App() {
                 )
             }
 
-            // 假的服务实例
-            val fakeAuthService = object : com.pyy.journalapp.auth.AuthService {
-                override suspend fun getCurrentUser(): User? = null
-                override suspend fun login(email: String, password: String): User? = null
-                override suspend fun register(user: User, password: String): User? = null
-                override suspend fun logout() {}
-            }
-
             val exportManager = ExportManager()
+
+            // 选中的书籍状态
+            var selectedBook by remember { mutableStateOf<Book?>(null) }
 
             NavHost(
                 navController = navController,
@@ -248,34 +251,33 @@ fun App() {
                     HomeScreen(
                         books = sampleBooks,
                         onBookClick = { book ->
+                            selectedBook = book  // 保存选中的书籍
                             navController.navigate("bookdetail")
                         },
                         onAddBookClick = {
                             // 智能建议：分析用户的书写模式并推荐新主题
                             println("AI建议：您可以尝试写一本关于「技能提升」的手账")
-                        },
-                        onAIInsightsClick = {
-                            navController.navigate("aiinsights")
-                        },
-                        onTimeCapsuleClick = {
-                            navController.navigate("timecapsule")
                         }
                     )
                 }
                 composable("bookdetail") {
+                    val book = selectedBook ?: sampleBooks[0]  // 使用选中的书籍或默认第一本书
                     val isExporting = false
                     val exportResult = null
                     val progress = 0
 
                     androidx.compose.foundation.layout.Box {
                         BookDetailScreen(
-                            bookTitle = sampleBooks[0].title,
-                            journalEntries = sampleJournalEntries.filter { it.bookId == sampleBooks[0].id },
+                            bookTitle = book.title,
+                            journalEntries = sampleJournalEntries.filter { it.bookId == book.id },
                             onJournalClick = { journal ->
                                 navController.navigate("journalview")
                             },
                             onAddJournalClick = {
                                 navController.navigate("editor")
+                            },
+                            onBackClick = {  // 添加返回回调
+                                navController.popBackStack()
                             },
                             onExportImagesClick = {
                                 // 使用AI分析当前书籍内容并提供建议
@@ -347,8 +349,8 @@ fun App() {
                                 ownerId = IdGenerator.generateId(),
                                 bookId = sampleBooks[0].id,
                                 title = "新日记",
-                                createdAt = kotlinx.datetime.Clock.System.now().toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault()),
-                                updatedAt = kotlinx.datetime.Clock.System.now().toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault()),
+                                createdAt = DateTimeUtils.now(),
+                                updatedAt = DateTimeUtils.now(),
                                 blocks = recommendedTemplate.generateDefaultContent()
                             )
 

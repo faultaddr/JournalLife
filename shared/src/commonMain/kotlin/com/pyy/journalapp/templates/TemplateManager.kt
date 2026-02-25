@@ -9,16 +9,12 @@ import com.pyy.journalapp.models.QuoteBlock
 import com.pyy.journalapp.models.TodoBlock
 import com.pyy.journalapp.models.DividerBlock
 import com.pyy.journalapp.models.TextFormat
+import com.pyy.journalapp.utils.DateTimeUtils
 import com.pyy.journalapp.utils.IdGenerator
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
-import kotlin.time.ExperimentalTime
 
 /**
  * 情境化創作模板管理器
  */
-@OptIn(ExperimentalStdlibApi::class, ExperimentalTime::class)
 class TemplateManager {
 
     /**
@@ -238,190 +234,182 @@ class EventTemplate : JournalTemplate(
 }
 
 // 生成函數
-private fun generateTravelTemplateBlocks(): List<Block> = listOf(
-    @OptIn(ExperimentalTime::class)
-    HeadingBlock(
-        id = IdGenerator.generateId(),
-        createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        orderIndex = 0,
-        text = "今日行程",
-        level = 1
-    ),
-    @OptIn(ExperimentalTime::class)
-    TextBlock(
-        id = IdGenerator.generateId(),
-        createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        orderIndex = 1,
-        text = "今天的景點是：",
-        format = TextFormat.PLAIN
-    ),
-    @OptIn(ExperimentalTime::class)
-    TextBlock(
-        id = IdGenerator.generateId(),
-        createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        orderIndex = 2,
-        text = "今日感受：",
-        format = TextFormat.PLAIN
-    ),
-    @OptIn(ExperimentalTime::class)
-    DividerBlock(
-        id = IdGenerator.generateId(),
-        createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        orderIndex = 3
-    ),
-    @OptIn(ExperimentalTime::class)
-    HeadingBlock(
-        id = IdGenerator.generateId(),
-        createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        orderIndex = 4,
-        text = "美食記錄",
-        level = 2
-    ),
-    @OptIn(ExperimentalTime::class)
-    TextBlock(
-        id = IdGenerator.generateId(),
-        createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        orderIndex = 5,
-        text = "今天吃到的美食：",
-        format = TextFormat.PLAIN
+private fun generateTravelTemplateBlocks(): List<Block> {
+    val now = DateTimeUtils.now()
+    return listOf(
+        HeadingBlock(
+            id = IdGenerator.generateId(),
+            createdAt = now,
+            updatedAt = now,
+            orderIndex = 0,
+            text = "今日行程",
+            level = 1
+        ),
+        TextBlock(
+            id = IdGenerator.generateId(),
+            createdAt = now,
+            updatedAt = now,
+            orderIndex = 1,
+            text = "今天的景點是：",
+            format = TextFormat.PLAIN
+        ),
+        TextBlock(
+            id = IdGenerator.generateId(),
+            createdAt = now,
+            updatedAt = now,
+            orderIndex = 2,
+            text = "今日感受：",
+            format = TextFormat.PLAIN
+        ),
+        DividerBlock(
+            id = IdGenerator.generateId(),
+            createdAt = now,
+            updatedAt = now,
+            orderIndex = 3
+        ),
+        HeadingBlock(
+            id = IdGenerator.generateId(),
+            createdAt = now,
+            updatedAt = now,
+            orderIndex = 4,
+            text = "美食記錄",
+            level = 2
+        ),
+        TextBlock(
+            id = IdGenerator.generateId(),
+            createdAt = now,
+            updatedAt = now,
+            orderIndex = 5,
+            text = "今天吃到的美食：",
+            format = TextFormat.PLAIN
+        )
     )
-)
+}
 
-private fun generateBirthdayTemplateBlocks(): List<Block> = listOf(
-    @OptIn(ExperimentalTime::class)
-    HeadingBlock(
-        id = IdGenerator.generateId(),
-        createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        orderIndex = 0,
-        text = "🎉 今天是特別的日子！",
-        level = 1
-    ),
-    @OptIn(ExperimentalTime::class)
-    QuoteBlock(
-        id = IdGenerator.generateId(),
-        createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        orderIndex = 1,
-        text = "願歲月不老，友誼長存",
-        author = "未知"
-    ),
-    @OptIn(ExperimentalTime::class)
-    TextBlock(
-        id = IdGenerator.generateId(),
-        createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        orderIndex = 2,
-        text = "今年的生日願望是：",
-        format = TextFormat.PLAIN
-    ),
-    @OptIn(ExperimentalTime::class)
-    TodoBlock(
-        id = IdGenerator.generateId(),
-        createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        orderIndex = 3,
-        text = "慶祝活動",
-        completed = false
-    ),
-    @OptIn(ExperimentalTime::class)
-    TodoBlock(
-        id = IdGenerator.generateId(),
-        createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        orderIndex = 4,
-        text = "感謝名單",
-        completed = false
+private fun generateBirthdayTemplateBlocks(): List<Block> {
+    val now = DateTimeUtils.now()
+    return listOf(
+        HeadingBlock(
+            id = IdGenerator.generateId(),
+            createdAt = now,
+            updatedAt = now,
+            orderIndex = 0,
+            text = "🎉 今天是特別的日子！",
+            level = 1
+        ),
+        QuoteBlock(
+            id = IdGenerator.generateId(),
+            createdAt = now,
+            updatedAt = now,
+            orderIndex = 1,
+            text = "願歲月不老，友誼長存",
+            author = "未知"
+        ),
+        TextBlock(
+            id = IdGenerator.generateId(),
+            createdAt = now,
+            updatedAt = now,
+            orderIndex = 2,
+            text = "今年的生日願望是：",
+            format = TextFormat.PLAIN
+        ),
+        TodoBlock(
+            id = IdGenerator.generateId(),
+            createdAt = now,
+            updatedAt = now,
+            orderIndex = 3,
+            text = "慶祝活動",
+            completed = false
+        ),
+        TodoBlock(
+            id = IdGenerator.generateId(),
+            createdAt = now,
+            updatedAt = now,
+            orderIndex = 4,
+            text = "感謝名單",
+            completed = false
+        )
     )
-)
+}
 
-private fun generateEmotionalTemplateBlocks(): List<Block> = listOf(
-    @OptIn(ExperimentalTime::class)
-    HeadingBlock(
-        id = IdGenerator.generateId(),
-        createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        orderIndex = 0,
-        text = "情感釋放空間",
-        level = 1
-    ),
-    @OptIn(ExperimentalTime::class)
-    TextBlock(
-        id = IdGenerator.generateId(),
-        createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        orderIndex = 1,
-        text = "此刻我的感受：",
-        format = TextFormat.PLAIN
-    ),
-    @OptIn(ExperimentalTime::class)
-    TextBlock(
-        id = IdGenerator.generateId(),
-        createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        orderIndex = 2,
-        text = "導致這種感受的原因：",
-        format = TextFormat.PLAIN
-    ),
-    @OptIn(ExperimentalTime::class)
-    DividerBlock(
-        id = IdGenerator.generateId(),
-        createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        orderIndex = 3
-    ),
-    @OptIn(ExperimentalTime::class)
-    HeadingBlock(
-        id = IdGenerator.generateId(),
-        createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        orderIndex = 4,
-        text = "積極展望",
-        level = 2
-    ),
-    @OptIn(ExperimentalTime::class)
-    TextBlock(
-        id = IdGenerator.generateId(),
-        createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        orderIndex = 5,
-        text = "明天我希望：",
-        format = TextFormat.PLAIN
+private fun generateEmotionalTemplateBlocks(): List<Block> {
+    val now = DateTimeUtils.now()
+    return listOf(
+        HeadingBlock(
+            id = IdGenerator.generateId(),
+            createdAt = now,
+            updatedAt = now,
+            orderIndex = 0,
+            text = "情感釋放空間",
+            level = 1
+        ),
+        TextBlock(
+            id = IdGenerator.generateId(),
+            createdAt = now,
+            updatedAt = now,
+            orderIndex = 1,
+            text = "此刻我的感受：",
+            format = TextFormat.PLAIN
+        ),
+        TextBlock(
+            id = IdGenerator.generateId(),
+            createdAt = now,
+            updatedAt = now,
+            orderIndex = 2,
+            text = "導致這種感受的原因：",
+            format = TextFormat.PLAIN
+        ),
+        DividerBlock(
+            id = IdGenerator.generateId(),
+            createdAt = now,
+            updatedAt = now,
+            orderIndex = 3
+        ),
+        HeadingBlock(
+            id = IdGenerator.generateId(),
+            createdAt = now,
+            updatedAt = now,
+            orderIndex = 4,
+            text = "積極展望",
+            level = 2
+        ),
+        TextBlock(
+            id = IdGenerator.generateId(),
+            createdAt = now,
+            updatedAt = now,
+            orderIndex = 5,
+            text = "明天我希望：",
+            format = TextFormat.PLAIN
+        )
     )
-)
+}
 
-private fun generateDefaultTemplateBlocks(): List<Block> = listOf(
-    @OptIn(ExperimentalTime::class)
-    HeadingBlock(
-        id = IdGenerator.generateId(),
-        createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        orderIndex = 0,
-        text = "今日記錄",
-        level = 1
-    ),
-    @OptIn(ExperimentalTime::class)
-    TextBlock(
-        id = IdGenerator.generateId(),
-        createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        orderIndex = 1,
-        text = "今天發生了：",
-        format = TextFormat.PLAIN
-    ),
-    @OptIn(ExperimentalTime::class)
-    TextBlock(
-        id = IdGenerator.generateId(),
-        createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-        orderIndex = 2,
-        text = "我的感受：",
-        format = TextFormat.PLAIN
+private fun generateDefaultTemplateBlocks(): List<Block> {
+    val now = DateTimeUtils.now()
+    return listOf(
+        HeadingBlock(
+            id = IdGenerator.generateId(),
+            createdAt = now,
+            updatedAt = now,
+            orderIndex = 0,
+            text = "今日記錄",
+            level = 1
+        ),
+        TextBlock(
+            id = IdGenerator.generateId(),
+            createdAt = now,
+            updatedAt = now,
+            orderIndex = 1,
+            text = "今天發生了：",
+            format = TextFormat.PLAIN
+        ),
+        TextBlock(
+            id = IdGenerator.generateId(),
+            createdAt = now,
+            updatedAt = now,
+            orderIndex = 2,
+            text = "我的感受：",
+            format = TextFormat.PLAIN
+        )
     )
-)
+}

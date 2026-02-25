@@ -30,7 +30,7 @@ fun JournalEditorScreen(
     onBlockDelete: (Int) -> Unit,
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier,
-    smartJournalViewModel: SmartJournalViewModel = SmartJournalViewModel()  // 注入智能日记视图模型
+    smartJournalViewModel: SmartJournalViewModel = SmartJournalViewModel()
 ) {
     var title by remember { mutableStateOf(journalTitle) }
 
@@ -38,7 +38,6 @@ fun JournalEditorScreen(
         title = journalTitle
     }
 
-    // 使用智能建议
     val aiSuggestions by smartJournalViewModel.aiSuggestions.collectAsState()
 
     JournalAppTheme {
@@ -47,13 +46,12 @@ fun JournalEditorScreen(
                 TopAppBar(
                     title = { Text("编辑日记") },
                     navigationIcon = {
-                        IconButton(onClick = { /* Navigate back */ }) {
-                            Text("<-") // 返回图标作为文本
+                        TextButton(onClick = { /* Navigate back */ }) {
+                            Text("← 返回")
                         }
                     },
                     actions = {
-                        IconButton(onClick = {
-                            // 保存前执行AI分析
+                        TextButton(onClick = {
                             val currentEntry = JournalEntry(
                                 id = Uuid.random().toString(),
                                 ownerId = Uuid.random().toString(),
@@ -66,7 +64,7 @@ fun JournalEditorScreen(
                             smartJournalViewModel.analyzeContent(currentEntry)
                             onSaveClick()
                         }) {
-                            Text("✅") // 保存图标作为文本
+                            Text("✓ 保存")
                         }
                     }
                 )
@@ -74,19 +72,18 @@ fun JournalEditorScreen(
             floatingActionButton = {
                 ExtendedFloatingActionButton(
                     onClick = {
-                        // Add a new text block by default
                         val newTextBlock = TextBlock(
                             id = Uuid.random().toString(),
-                            createdAt = kotlin.time.Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-                            updatedAt = kotlin.time.Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+                            createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+                            updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
                             orderIndex = blocks.size,
                             text = ""
                         )
                         onBlockAdd(newTextBlock)
-                    },
-                    icon = { Text("➕") }, // 更好的添加图标
-                    text = { Text("添加内容") }
-                )
+                    }
+                ) {
+                    Text("+ 添加内容")
+                }
             }
         ) { paddingValues ->
             Column(
@@ -94,7 +91,6 @@ fun JournalEditorScreen(
                     .padding(paddingValues)
                     .fillMaxSize()
             ) {
-                // Title field
                 OutlinedTextField(
                     value = title,
                     onValueChange = {
@@ -107,11 +103,9 @@ fun JournalEditorScreen(
                         .padding(16.dp)
                 )
 
-                // AI建议面板
                 AISuggestionPanel(
                     contentAnalysis = aiSuggestions,
                     onSuggestionClick = { suggestion ->
-                        // 当用户点击建议时，可以添加到内容中
                         println("用户选择了AI建议: $suggestion")
                     },
                     modifier = Modifier
@@ -121,7 +115,6 @@ fun JournalEditorScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Blocks list
                 LazyColumn(
                     modifier = Modifier
                         .weight(1f)
@@ -162,7 +155,6 @@ fun BlockEditor(
                 .fillMaxWidth()
                 .padding(12.dp)
         ) {
-            // Block header with type and delete button
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
@@ -170,18 +162,18 @@ fun BlockEditor(
             ) {
                 Text(
                     text = when (block) {
-                        is TextBlock -> "📝 文本块"
-                        is ImageBlock -> "🖼️ 图片块"
-                        is TodoBlock -> "✅ 待办块"
+                        is TextBlock -> "✎ 文本块"
+                        is ImageBlock -> "🖼 图片块"
+                        is TodoBlock -> "☑ 待办块"
                         is DividerBlock -> "— 分隔线"
-                        is QuoteBlock -> "💬 引用块"
-                        is HeadingBlock -> "📑 标题块"
+                        is QuoteBlock -> "❝ 引用块"
+                        is HeadingBlock -> "❖ 标题块"
                     },
                     style = MaterialTheme.typography.titleMedium
                 )
 
                 IconButton(onClick = onDeleteClick) {
-                    Text("🗑️") // 更好的删除图标
+                    Text("🗑", fontSize = androidx.compose.ui.unit.TextUnit(18F, androidx.compose.ui.unit.TextUnitType.Sp))
                 }
             }
 
@@ -194,7 +186,7 @@ fun BlockEditor(
                         onValueChange = { newText ->
                             val updatedBlock = block.copy(
                                 text = newText,
-                                updatedAt = kotlin.time.Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                                updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
                             )
                             onBlockChange(updatedBlock)
                         },
@@ -204,20 +196,18 @@ fun BlockEditor(
                     )
                 }
                 is ImageBlock -> {
-                    // For now, just show a placeholder for image block
                     OutlinedTextField(
                         value = block.imageId,
                         onValueChange = { newImageId ->
                             val updatedBlock = block.copy(
                                 imageId = newImageId,
-                                updatedAt = kotlin.time.Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                                updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
                             )
                             onBlockChange(updatedBlock)
                         },
                         label = { Text("图片ID或路径") },
                         modifier = Modifier.fillMaxWidth()
                     )
-                    // In a real app, this would show an image picker and preview
                 }
                 is TodoBlock -> {
                     Row(
@@ -229,7 +219,7 @@ fun BlockEditor(
                             onCheckedChange = { completed ->
                                 val updatedBlock = block.copy(
                                     completed = completed,
-                                    updatedAt = kotlin.time.Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                                    updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
                                 )
                                 onBlockChange(updatedBlock)
                             }
@@ -239,7 +229,7 @@ fun BlockEditor(
                             onValueChange = { newText ->
                                 val updatedBlock = block.copy(
                                     text = newText,
-                                    updatedAt = kotlin.time.Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                                    updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
                                 )
                                 onBlockChange(updatedBlock)
                             },
@@ -258,7 +248,7 @@ fun BlockEditor(
                         onValueChange = { newText ->
                             val updatedBlock = block.copy(
                                 text = newText,
-                                updatedAt = kotlin.time.Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                                updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
                             )
                             onBlockChange(updatedBlock)
                         },
@@ -272,21 +262,19 @@ fun BlockEditor(
                         onValueChange = { newText ->
                             val updatedBlock = block.copy(
                                 text = newText,
-                                updatedAt = kotlin.time.Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                                updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
                             )
                             onBlockChange(updatedBlock)
                         },
                         label = { Text("标题文字...") },
                         modifier = Modifier.fillMaxWidth()
                     )
-                    // Allow selecting heading level
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text("级别: ")
                         Spacer(modifier = Modifier.width(8.dp))
-                        // Simple level selector
                         repeat(6) { level ->
                             val isSelected = block.level == level + 1
                             FilterChip(
@@ -294,7 +282,7 @@ fun BlockEditor(
                                 onClick = {
                                     val updatedBlock = block.copy(
                                         level = level + 1,
-                                        updatedAt = kotlin.time.Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                                        updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
                                     )
                                     onBlockChange(updatedBlock)
                                 },
