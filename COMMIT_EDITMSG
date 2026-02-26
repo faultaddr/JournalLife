@@ -1,0 +1,22 @@
+fix: remove mock data, using real memory data
+
+Signed-off-by: faultaddr <cuferpan@gmail.com>
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# On branch master
+# Your branch is up to date with 'origin/master'.
+#
+# Changes to be committed:
+#	modified:   composeApp/src/commonMain/kotlin/com/pyy/journalapp/App.kt
+#	new file:   composeApp/src/commonMain/kotlin/com/pyy/journalapp/components/ContributionHeatmap.kt
+#	new file:   composeApp/src/commonMain/kotlin/com/pyy/journalapp/components/bookshelf/BookCover.kt
+#	new file:   composeApp/src/commonMain/kotlin/com/pyy/journalapp/components/bookshelf/BookOpenAnimation.kt
+#	new file:   composeApp/src/commonMain/kotlin/com/pyy/journalapp/components/bookshelf/Bookshelf.kt
+#	new file:   composeApp/src/commonMain/kotlin/com/pyy/journalapp/screens/AddBookScreen.kt
+#	modified:   composeApp/src/commonMain/kotlin/com/pyy/journalapp/screens/HomeScreen.kt
+#	new file:   shared/src/androidMain/kotlin/com/pyy/journalapp/database/DatabaseDriverFactory.android.kt
+#	new file:   shared/src/commonMain/kotlin/com/pyy/journalapp/database/DatabaseDriverFactory.kt
+#	new file:   shared/src/jvmMain/kotlin/com/pyy/journalapp/database/DatabaseDriverFactory.jvm.kt
+#

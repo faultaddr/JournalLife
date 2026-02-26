@@ -1,4 +1,4 @@
-rootProject.name = "JournalLifeApp"
+rootProject.name = "KMP-App-Template"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
@@ -28,10 +28,4 @@ dependencyResolutionManagement {
     }
 }
 
-plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
-}
-
 include(":composeApp")
-include(":server")
-include(":shared")

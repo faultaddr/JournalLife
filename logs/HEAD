@@ -1,0 +1,5 @@
+0000000000000000000000000000000000000000 5cffa7f90fc62dcd216c75f6933deae219c15c6a missy <missy@Mac-Studio.(none)> 1770651181 +0800	clone: from github.com:faultaddr/JournalLife.git
+5cffa7f90fc62dcd216c75f6933deae219c15c6a 5bbda8632b93a269ec304111881fbb93cd0ec76b faultaddr <cuferpan@gmail.com> 1770772596 +0800	commit: feat: add more function,make it run
+5bbda8632b93a269ec304111881fbb93cd0ec76b e02c0fd435e1b70ddd4b0224f86ad651463cdf04 faultaddr <cuferpan@gmail.com> 1771948089 +0800	pull: Fast-forward
+e02c0fd435e1b70ddd4b0224f86ad651463cdf04 b062aeaf47dfd8499cbb01c2bf63da06a3b5a81f faultaddr <cuferpan@gmail.com> 1772035263 +0800	commit: feat: new style
+b062aeaf47dfd8499cbb01c2bf63da06a3b5a81f 6519b2214bd4ed74934d98cfc25445381c755e7b faultaddr <cuferpan@gmail.com> 1772044729 +0800	commit: fix: remove mock data, using real memory data
